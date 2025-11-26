@@ -7,6 +7,10 @@ import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
 
 const app = express()
+
+// Middlewares
+app.use(cors())
+app.use(express.json())
 const port = process.env.PORT || 4000
 const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/inspiration_saloon'
 const adminUser = process.env.ADMIN_USER || 'admin'
@@ -16,6 +20,10 @@ const smtpHost = process.env.SMTP_HOST
 const smtpPort = process.env.SMTP_PORT
 const smtpUser = process.env.SMTP_USER
 const smtpPass = process.env.SMTP_PASS
+
+// Middlewares
+app.use(cors())
+app.use(express.json())
 
 // Customer schema for loyalty system
 const customerSchema = new mongoose.Schema({
@@ -65,9 +73,7 @@ app.get('/api/admin/customers', authMiddleware, async (req, res) => {
   }
 })
 
-// Middlewares
-app.use(cors())
-app.use(express.json())
+
 
 // Mongo connection
 mongoose.set('strictQuery', true)
@@ -82,6 +88,7 @@ const appointmentSchema = new mongoose.Schema(
     name: { type: String, required: true },
     phone: { type: String, required: true },
     email: { type: String },
+    gender: { type: String, enum: ['male', 'female'], required: true }, 
     service: { type: String, required: true },
     preferredDate: { type: String, required: true },
     preferredTime: { type: String, required: true },
@@ -103,6 +110,8 @@ const serviceSchema = new mongoose.Schema(
     duration: { type: String },
     image: { type: String },
     active: { type: Boolean, default: true },
+    gender: { type: String, enum: ['male', 'female', 'unisex'], default: 'unisex' }
+
   },
   { timestamps: true }
 )
@@ -177,10 +186,12 @@ app.post('/api/appointments', async (req, res) => {
       service,
       preferredDate,
       preferredTime,
+       gender,
     } = req.body || {}
     const errors = []
     if (!name) errors.push('Name is required')
     if (!phone) errors.push('Phone is required')
+      if (!gender) errors.push('Gender is required')
     if (!service) errors.push('Service is required')
     if (!preferredDate) errors.push('Preferred date is required')
     if (!preferredTime) errors.push('Preferred time is required')

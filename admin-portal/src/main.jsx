@@ -455,6 +455,7 @@ function App() {
                               <th className="py-2 pr-4">Name</th>
                               <th className="py-2 pr-4">Phone</th>
                               <th className="py-2 pr-4">Email</th>
+                              <th className="py-2 pr-4">Gender</th>
                               <th className="py-2 pr-4">Service</th>
                               <th className="py-2 pr-4">Date</th>
                               <th className="py-2 pr-4">Time</th>
@@ -468,6 +469,7 @@ function App() {
                                 <td className="py-2 pr-4">{a.name}</td>
                                 <td className="py-2 pr-4">{a.phone}</td>
                                 <td className="py-2 pr-4">{a.email || '-'}</td>
+                                <td className="py-2 pr-4">{a.gender || '-'}</td> 
                                 <td className="py-2 pr-4">{a.service}</td>
                                 <td className="py-2 pr-4">{a.preferredDate}</td>
                                 <td className="py-2 pr-4">{a.preferredTime}</td>

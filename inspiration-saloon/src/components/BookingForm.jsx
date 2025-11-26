@@ -4,7 +4,8 @@ const defaultState = {
   name: '',
   phone: '',
   email: '',
-  service: 'Hair Styling',
+   gender: '',
+  service: '',
   preferredDate: '',
   preferredTime: '',
   notes: '',
@@ -23,7 +24,8 @@ export default function BookingForm() {
     setMessage('')
     setError('')
     try {
-      const res = await fetch('/api/appointments', {
+      const res = await fetch('http://localhost:4000/api/appointments', 
+ {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -57,7 +59,8 @@ export default function BookingForm() {
   async function loadBooked(date) {
     if (!date) return
     try {
-      const res = await fetch(`/api/appointments/booked?date=${encodeURIComponent(date)}`)
+      const res = await fetch(`http://localhost:4000/api/appointments/booked?date=${encodeURIComponent(date)}`)
+
       const data = await res.json()
       if (Array.isArray(data)) setBooked(data)
     } catch {}
