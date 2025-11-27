@@ -13,7 +13,7 @@ export default function Navbar() {
               ['Services', '#services'],
               ['Gallery', '#gallery'],
               ['Hair Styles', '#hairstyles'],
-              ['Pricing', '#pricing'],
+              // ['Pricing', '#pricing'],
               ['Contact', '#contact'],
             ].map(([label, href]) => (
               <a

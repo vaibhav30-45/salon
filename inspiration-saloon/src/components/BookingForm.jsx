@@ -1,116 +1,413 @@
-import { useState } from 'react'
-
-const defaultState = {
-  name: '',
-  phone: '',
-  email: '',
-   gender: '',
-  service: '',
-  preferredDate: '',
-  preferredTime: '',
-  notes: '',
-}
+import { useState, useEffect ,useRef} from "react";
+import axios from "axios";
 
 export default function BookingForm() {
-  const [form, setForm] = useState(defaultState)
-  const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-  const [booked, setBooked] = useState([])
+  const [gender, setGender] = useState("");
+  const slotRef = useRef(null);
 
-  async function handleSubmit(e) {
-    e.preventDefault()
-    setSubmitting(true)
-    setMessage('')
-    setError('')
-    try {
-      const res = await fetch('http://localhost:4000/api/appointments', 
- {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      if (!res.ok) {
-        const data = await res.json().catch(()=>({}))
-        const msg = data?.errors ? data.errors.join(', ') : (data?.error || 'Failed to book appointment')
-        throw new Error(msg)
-      }
-      setForm(defaultState)
-      setMessage('Appointment requested! We will confirm shortly.')
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setSubmitting(false)
+  const [services, setServices] = useState([]);
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [selectedService, setSelectedService] = useState(null);
+  const [price, setPrice] = useState(0);
+  const [showSlots, setShowSlots] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    gender: "",
+    service: "",
+    preferredDate: "",
+    preferredTime: "",
+    notes: "",
+  });
+
+  
+
+useEffect(() => {
+  if (!gender) return;
+
+  const filtered = ALL_SERVICES.filter(
+    (s) => s.gender === gender || s.gender === "unisex"
+  );
+
+  setFilteredServices(filtered);
+  setSelectedService(null);
+  setPrice(0);
+  setFormData({ ...formData, service: "" });
+}, [gender]);
+
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const confirmPay = window.confirm(`Pay ₹${price}?`);
+  if (!confirmPay) return;
+
+  // Payment successful → show slot section
+  setShowSlots(true);
+
+  // Scroll to slot section
+  setTimeout(() => {
+    slotRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, 300);
+};
+
+
+const handleFinalConfirm = async () => {
+  if (!selectedSlot) {
+    alert("Please select a time slot.");
+    return;
+  }
+
+  try {
+    const res = await axios.post("/api/appointments", {
+      ...formData,
+      finalSlot: selectedSlot,
+      price,
+      paid: true,
+    });
+
+    if (res.status === 201) {
+      alert("Appointment Confirmed Successfully!");
+
+      // CLEAR THE FORM
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        gender: "",
+        service: "",
+        preferredDate: "",
+        notes: "",
+      });
+
+      setSelectedSlot("");
+      setPrice(0);
+      setGender("");
+      setFilteredServices([]);
+      setShowSlots(false);
     }
+  } catch (error) {
+    console.log(error);
+    alert("Something went wrong!");
   }
+};
 
-  // Build 30-min slots from 10:00 to 20:00
-  const slots = []
-  for (let h = 10; h <= 20; h++) {
-    for (let m of [0, 30]) {
-      const hh = String(h).padStart(2, '0')
-      const mm = String(m).padStart(2, '0')
-      const t = `${hh}:${mm}`
-      if (h === 20 && m === 30) continue
-      slots.push(t)
-    }
-  }
 
-  async function loadBooked(date) {
-    if (!date) return
-    try {
-      const res = await fetch(`http://localhost:4000/api/appointments/booked?date=${encodeURIComponent(date)}`)
 
-      const data = await res.json()
-      if (Array.isArray(data)) setBooked(data)
-    } catch {}
-  }
+const ALL_SERVICES = [
+  {
+    name: "Haircut",
+    price: 200,
+    gender: "male",
+  },
+  {
+    name: "Beard Trim",
+    price: 150,
+    gender: "male",
+  },
+  {
+    name: "Facial",
+    price: 500,
+    gender: "female",
+  },
+  {
+    name: "Hair Spa",
+    price: 700,
+    gender: "female",
+  },
+  {
+    name: "Head Massage",
+    price: 300,
+    gender: "female",
+  },
+];
+
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <input required className="rounded-md border border-gray-300 px-3 py-2" placeholder="Full name"
-        value={form.name} onChange={(e)=>setForm({...form, name:e.target.value})} />
-      <input required className="rounded-md border border-gray-300 px-3 py-2" placeholder="Phone number"
-        value={form.phone} onChange={(e)=>setForm({...form, phone:e.target.value})} />
-      <input className="rounded-md border border-gray-300 px-3 py-2 sm:col-span-2" placeholder="Email (optional)"
-        value={form.email} onChange={(e)=>setForm({...form, email:e.target.value})} />
-      <select className="rounded-md border border-gray-300 px-3 py-2" value={form.service}
-        onChange={(e)=>setForm({...form, service:e.target.value})}>
-        {[
-          'Hair Styling',
-          'Beard Grooming',
-          'Facials',
-          'Manicure & Pedicure',
-          'Party Makeup (AI-Enhanced)',
-          'Bridal Makeup (AI Preview)'
-        ].map(s => (
-          <option key={s} value={s}>{s}</option>
-        ))}
-      </select>
-      <div className="grid grid-cols-2 gap-4">
-        <input required type="date" className="rounded-md border border-gray-300 px-3 py-2" value={form.preferredDate}
-          onChange={(e)=>{ const v=e.target.value; setForm({...form, preferredDate:v}); loadBooked(v) }} />
-        <select required className="rounded-md border border-gray-300 px-3 py-2" value={form.preferredTime}
-          onChange={(e)=>setForm({...form, preferredTime:e.target.value})}>
-          <option value="" disabled>Select time</option>
-          {slots.map((t)=> (
-            <option key={t} value={t} disabled={booked.includes(t)}>
-              {t} {booked.includes(t) ? '(Booked)' : ''}
-            </option>
-          ))}
-        </select>
-      </div>
-      <textarea className="rounded-md border border-gray-300 px-3 py-2 sm:col-span-2" rows="3" placeholder="Notes (optional)"
-        value={form.notes} onChange={(e)=>setForm({...form, notes:e.target.value})} />
-      <div className="sm:col-span-2 flex items-center gap-3">
-        <button disabled={submitting} className="rounded-md bg-brand px-5 py-2 text-white hover:bg-brand-dark disabled:opacity-60">
-          {submitting ? 'Booking...' : 'Book Appointment'}
-        </button>
-        {message && <span className="text-sm text-green-700">{message}</span>}
-        {error && <span className="text-sm text-red-600">{error}</span>}
-      </div>
-    </form>
-  )
+    <>
+      <style>{`
+        .booking-container {
+          max-width: 600px;
+          margin: 10px auto;
+          padding: 25px;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+          font-family: Arial;
+        }
+
+        .booking-title {
+          text-align: center;
+          font-size: 26px;
+          font-weight: 700;
+          margin-bottom: 20px;
+        }
+
+        .form-row {
+          display: flex;
+          gap: 20px;
+          margin-bottom: 15px;
+        }
+
+        .form-group {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+
+        label {
+          font-weight: 600;
+          margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        textarea {
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 15px;
+        }
+
+        .booking-btn {
+          width: 100%;
+          margin-top: 15px;
+          padding: 12px;
+          background: #b18c5a;
+          color: white;
+          font-size: 18px;
+          font-weight: bold;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+
+        .booking-btn:hover {
+          background: #9d7847;
+        }
+
+        .price-box {
+          background: #f4efe8;
+          padding: 10px;
+          margin-top: -5px;
+          margin-bottom: 12px;
+          border-left: 4px solid #b18c5a;
+          font-weight: 600;
+          border-radius: 6px;
+        }
+
+        .slot-section {
+          margin-top: 30px;
+          padding: 20px;
+          background: #fafafa;
+          border-radius: 10px;
+        }
+
+        .slot-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+          margin-top: 10px;
+        }
+
+        .slot-box {
+          padding: 12px;
+          background: #fff;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-weight: 600;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        .slot-box:hover {
+          background: #b18c5a;
+          color: white;
+          border-color: #b18c5a;
+        }
+.active-slot {
+  background: #b18c5a !important;
+  color: white;
+  border-color: #b18c5a;
 }
 
+        @media (max-width: 600px) {
+          .form-row {
+            flex-direction: column;
+          }
+        }
+      `}</style>
 
+      <div className="booking-container">
+        <h2 className="booking-title">Book an Appointment</h2>
+
+        <form className="booking-form" onSubmit={handleSubmit}>
+
+          {/* Name + Phone in same row */}
+          <div className="form-row">
+            <div className="form-group">
+              <label>Full Name</label>
+              <input
+                type="text"
+                name="name"
+                required
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Phone Number</label>
+              <input
+                type="text"
+                name="phone"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          {/* Email */}
+          <div className="form-row">
+          <div className="form-group">
+            <label>Email (Optional)</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
+</div>
+          {/* Gender + Services in same row */}
+          <div className="form-row">
+            <div className="form-group">
+              <label>Select Gender</label>
+              <select
+                name="gender"
+                value={formData.gender}
+                required
+                onChange={(e) => {
+                  setGender(e.target.value);
+                  handleChange(e);
+                }}
+              >
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Select Service</label>
+              <select
+                name="service"
+                value={formData.service}
+                required
+                disabled={!gender}
+                onChange={(e) => {
+                  const selected = filteredServices.find(
+                    (s) => s.name === e.target.value
+                  );
+                  setSelectedService(selected);
+                  setPrice(selected?.price || 0);
+                  handleChange(e);
+                }}
+              >
+                <option value="">Select</option>
+                {filteredServices.map((service) => (
+                  <option key={service._id} value={service.name}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Price Box */}
+          {price > 0 && (
+            <div className="price-box">Service Price: ₹{price}</div>
+          )}
+
+          {/* Date */}
+          <div className="form-row">
+           
+          <div className="form-group">
+            <label>Select Preferred Date</label>
+            <input
+              type="date"
+              name="preferredDate"
+              required
+              onChange={handleChange}
+            />
+          </div>
+
+          {/* Time */}
+          <div className="form-group">
+            <label>Select Preferred Time</label>
+            <input
+              type="time"
+              name="preferredTime"
+              required
+              onChange={handleChange}
+            />
+          </div>
+          </div>
+
+          {/* Notes */}
+          <div className="form-group">
+            <label>Additional Notes (Optional)</label>
+            <textarea
+              name="notes"
+              rows="3"
+              onChange={handleChange}
+            />
+          </div>
+
+          <button type="submit" className="booking-btn">
+            Confirm & Pay
+          </button>
+        </form>
+
+        {/* Slots After Payment */}
+      {showSlots && (
+  <div className="slot-section" ref={slotRef}>
+    <h3>Select Your Final Time Slot</h3>
+    <p>Choose a slot to confirm your appointment.</p>
+
+    <div className="slot-grid">
+      {["10:00 AM", "12:00 PM", "02:00 PM", "04:00 PM", "06:00 PM"].map(
+        (slot) => (
+          <div
+            className={`slot-box ${selectedSlot === slot ? "active-slot" : ""}`}
+            key={slot}
+            onClick={() => setSelectedSlot(slot)}
+          >
+            {slot}
+          </div>
+        )
+      )}
+    </div>
+
+    {selectedSlot && (
+      <button
+        className="booking-btn"
+        style={{ marginTop: "20px" }}
+        onClick={handleFinalConfirm}
+      >
+        Confirm Appointment
+      </button>
+    )}
+  </div>
+)}
+      </div>
+    </>
+  );
+}

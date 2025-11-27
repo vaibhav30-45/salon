@@ -1,69 +1,176 @@
-import { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react';
 
-const fallbackImages = [
-  'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1519669011783-4eaa95fa73ab?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1593702235276-0ba4bd5a4001?q=80&w=1600&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop',
-]
+const Gallery = () => {
+  const [filter, setFilter] = useState('all');
+ useEffect(() => {
+    const fetchImages = async () => {
+      const res = await axios.get("/api/gallery");
+      setGalleryImages(res.data.images); 
+    };
 
-export default function Gallery() {
-  const [images, setImages] = useState(fallbackImages)
+    fetchImages();
+  }, []);
+  // Mobile show-limit states
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [isMobile, setIsMobile] = useState(false);
 
+  const galleryImages = [
+    { id: 1, src: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400', alt: 'Hair Styling', category: 'hair' },
+    { id: 2, src: 'https://images.unsplash.com/photo-1629189784191-9afdcbcb0398?w=600&auto=format&fit=crop&q=60', alt: 'Hair Coloring', category: 'hair' },
+    { id: 3, src: 'https://images.unsplash.com/photo-1684868265715-03e19a3e0e00?q=80&w=686&auto=format&fit=crop', alt: 'Makeup', category: 'makeup' },
+    { id: 4, src: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400', alt: 'Facial', category: 'skincare' },
+    { id: 5, src: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=400', alt: 'Nail Art', category: 'nails' },
+    { id: 6, src: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400', alt: 'Skin Care', category: 'skincare' },
+    { id: 7, src: 'https://plus.unsplash.com/premium_photo-1669675935857-d0d04023d728?q=80&w=713&auto=format&fit=crop', alt: 'Hair Coloring', category: 'hair' },
+    { id: 8, src: 'https://images.unsplash.com/photo-1654097800183-574ba7368f74?q=80&w=735&auto=format&fit=crop', alt: 'Hair Coloring', category: 'hair' },
+    { id: 9, src: 'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?q=80&w=1170&auto=format&fit=crop', alt: 'Hair Coloring', category: 'hair' },
+    { id: 10, src: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=600&auto=format&fit=crop&q=60', alt: 'Nail Art', category: 'nails' },
+    { id: 11, src: 'https://images.unsplash.com/photo-1677691257001-8bfd91e288ff?q=80&w=1974&auto=format&fit=crop', alt: 'Makeup', category: 'makeup' },
+    { id: 12, src: 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=400', alt: 'Facial', category: 'skincare' },
+  ];
+
+  // Detect mobile screen
   useEffect(() => {
-    let cancelled = false
-    const load = async () => {
-      try {
-        const res = await fetch('/api/gallery')
-        if (!res.ok) return
-        const data = await res.json()
-        if (!cancelled && Array.isArray(data) && data.length) {
-          setImages(data.filter(d=>d.active!==false).map(d=>d.url))
-        }
-      } catch {}
-    }
-    load()
-    return () => { cancelled = true }
-  }, [])
+    const checkScreen = () => setIsMobile(window.innerWidth < 600);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
+  const filteredImages =
+    filter === 'all' ? galleryImages : galleryImages.filter(img => img.category === filter);
+
+  const displayedImages = isMobile
+    ? filteredImages.slice(0, visibleCount)
+    : filteredImages;
 
   return (
-    <section id="gallery" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl font-display font-bold tracking-tight">Gallery</h2>
-          <p className="mt-3 text-center text-gray-600">A glimpse of our craft, space, and happy clients.</p>
-        </div>
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {images.map((src, idx) => (
-            <figure
-              key={idx}
-              className={[
-                'group relative overflow-hidden rounded-xl bg-white shadow-sm',
-                idx % 7 === 0 ? 'lg:col-span-2 lg:row-span-2 aspect-square' : 'aspect-square',
-              ].join(' ')}
-            >
-              <img
-                src={src}
-                alt="Salon work"
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                loading="lazy"
-                onError={(e)=>{ e.currentTarget.src='https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop' }}
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition">
-                <span className="inline-flex items-center gap-2 text-sm font-medium">
-                  <span className="inline-block h-2 w-2 rounded-full bg-brand"></span>
-                  Inspiration Saloon
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
+    <>
+      <style>{`
+        .gallery-section {
+          padding: 80px 20px;
+        }
+        .gallery-container {
+          max-width: 1200px;
+          margin: auto;
+        }
+          .gallery-header { text-align: center; margin-bottom: 50px; } .gallery-title { font-size: 3rem; font-weight: 300; color: #2c3e50; margin-bottom: 15px; background: linear-gradient(45deg, #000000ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } .gallery-subtitle { font-size: 1.2rem; color: #7f8c8d; font-weight: 300; }
+
+        /* Masonry Grid */
+        .masonry-grid {
+          column-count: 3;
+          column-gap: 20px;
+        }
+        .masonry-item {
+          width: 100%;
+          margin-bottom: 20px;
+          border-radius: 14px;
+          overflow: hidden;
+          break-inside: avoid;
+          opacity: 0;
+          transform: translateY(30px);
+          animation: fadeInUp 0.6s forwards;
+        }
+        .masonry-item img {
+          width: 100%;
+          display: block;
+        }
+
+        /* Fade Animation */
+        @keyframes fadeInUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin-bottom: 35px;
+          flex-wrap: wrap;
+        }
+        .filter-btn {
+          padding: 10px 22px;
+          border-radius: 25px;
+          border: 2px solid #b18c5a;
+          background: transparent;
+          cursor: pointer;
+          font-weight: 600;
+          transition: 0.2s ease;
+        }
+        .filter-btn.active,
+        .filter-btn:hover {
+          background: #b18c5a;
+          color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+          .masonry-grid { column-count: 2; }
+        }
+        @media (max-width: 480px) {
+          .masonry-grid { column-count: 1; }
+        }
+      `}</style>
+
+     <section className="gallery-section"> 
+      <div className="gallery-container">
+         <div className="gallery-header"> 
+          <h2 className="gallery-title">Gallery</h2> <p className="gallery-subtitle">Discover our amazing transformations and styles</p> </div>
+          {/* Filter Buttons */}
+         <div className="filter-buttons">
+  {['all', 'hair', 'makeup', 'skincare', 'nails'].map(category => (
+    <button
+      key={category}
+      className={`filter-btn ${filter === category ? 'active' : ''}`}
+      onClick={() => {
+        setFilter(category);
+        setVisibleCount(4); // reset limit when changing filter
+      }}
+    >
+      {category.charAt(0).toUpperCase() + category.slice(1)}
+    </button>
+  ))}
+</div>
 
 
+          {/* Masonry Layout */}
+          <div className="masonry-grid">
+            {displayedImages.map((img, index) => (
+              <div
+                className="masonry-item"
+                style={{ animationDelay: `${index * 0.08}s` }}
+                key={img.id}
+              >
+                <img src={img.src} alt={img.alt} loading="lazy" />
+              </div>
+            ))}
+          </div>
+
+          {/* Load More Button (mobile only) */}
+          {isMobile && visibleCount < filteredImages.length && (
+            <div style={{ textAlign: "center", marginTop: "25px" }}>
+              <button
+                onClick={() => setVisibleCount(prev => prev + 4)}
+                style={{
+                  padding: "12px 24px",
+                  background: "#000",
+                  color: "#fff",
+                  borderRadius: "8px",
+                  fontSize: "16px",
+                }}
+              >
+                Load More
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+    </>
+  );
+};
+
+export default Gallery;

@@ -26,7 +26,7 @@ export default function Footer() {
               <li><a className="hover:text-white" href="#services">Services</a></li>
               <li><a className="hover:text-white" href="#hairstyles">Hair Styles</a></li>
               <li><a className="hover:text-white" href="#gallery">Gallery</a></li>
-              <li><a className="hover:text-white" href="#pricing">Pricing</a></li>
+              {/* <li><a className="hover:text-white" href="#pricing">Pricing</a></li> */}
               <li><a className="hover:text-white" href="#booking">Book Now</a></li>
             </ul>
           </div>

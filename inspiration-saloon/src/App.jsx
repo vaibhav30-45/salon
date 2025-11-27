@@ -20,7 +20,7 @@ export default function App() {
         <HairStyles />
         <AiRecommendations />
         <Gallery />
-        <Pricing />
+        {/* <Pricing /> */}
         <Cta />
       </main>
       <Footer />
