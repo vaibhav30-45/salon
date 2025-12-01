@@ -108,12 +108,14 @@ const Gallery = () => {
         }
 
         /* Responsive */
-        @media (max-width: 768px) {
-          .masonry-grid { column-count: 2; }
-        }
-        @media (max-width: 480px) {
-          .masonry-grid { column-count: 1; }
-        }
+       @media (max-width: 768px) {
+  .masonry-grid { column-count: 2; }
+}
+
+@media (max-width: 480px) {
+  .masonry-grid { column-count: 2; } /* keep 2 instead of 1 */
+  .masonry-item img { border-radius: 10px; }
+}
       `}</style>
 
      <section className="gallery-section"> 
