@@ -15,5 +15,15 @@ body { @apply antialiased bg-white text-gray-900; }
   width: 400%;
   animation: scroll-x 20s linear infinite;
 }
+.swiper-button-next,
+.swiper-button-prev {
+  color: #b89563;  
+  margin:15px;         
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 25px;          
+}
 
 
