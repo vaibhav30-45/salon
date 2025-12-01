@@ -15,5 +15,29 @@ body { @apply antialiased bg-white text-gray-900; }
   width: 400%;
   animation: scroll-x 20s linear infinite;
 }
+@keyframes fadeSlide {
+  0%, 25% { opacity: 1; }
+  33%, 100% { opacity: 0; }
+}
+
+.animate-fade1 {
+  animation: fadeSlide 16s infinite;
+  animation-delay: 0s;
+}
+
+.animate-fade2 {
+  animation: fadeSlide 16s infinite;
+  animation-delay: 4s;
+}
+
+.animate-fade3 {
+  animation: fadeSlide 16s infinite;
+  animation-delay: 8s;
+}
+
+.animate-fade4 {
+  animation: fadeSlide 16s infinite;
+  animation-delay: 12s;
+}
 
 

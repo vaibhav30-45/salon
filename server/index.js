@@ -91,7 +91,7 @@ const appointmentSchema = new mongoose.Schema(
     gender: { type: String, enum: ['male', 'female'], required: true }, 
     service: { type: String, required: true },
     preferredDate: { type: String, required: true },
-     finalSlot: { type: String }, 
+     preferredTime: { type: String,required: true }, 
     notes: { type: String },
     status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'pending' },
     paid: { type: Boolean, default: false },
@@ -185,7 +185,7 @@ app.post('/api/appointments', async (req, res) => {
       phone,
       service,
       preferredDate,
-      finalSlot,
+      preferredTime,
        gender,
     } = req.body || {}
     const errors = []
@@ -194,11 +194,11 @@ app.post('/api/appointments', async (req, res) => {
       if (!gender) errors.push('Gender is required')
     if (!service) errors.push('Service is required')
     if (!preferredDate) errors.push('Preferred date is required')
-    if (!finalSlot) errors.push('Preferred time is required')
+    if (!preferredTime) errors.push('Preferred time is required')
     if (errors.length) return res.status(422).json({ errors })
 
     // reject if the selected slot is already booked (any non-cancelled status)
-    const existing = await Appointment.findOne({ preferredDate, finalSlot, status: { $ne: 'cancelled' } })
+    const existing = await Appointment.findOne({ preferredDate, preferredTime, status: { $ne: 'cancelled' } })
     if (existing) return res.status(409).json({ error: 'Selected time slot is already booked' })
 
     // Loyalty: Find or create customer, increment visit count

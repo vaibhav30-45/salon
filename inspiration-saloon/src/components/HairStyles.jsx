@@ -5,9 +5,9 @@ const boys = [
 ]
 
 const girls = [
-  { name: 'Soft Curls', img: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1600&auto=format&fit=crop' },
-  { name: 'Balayage', img: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1600&auto=format&fit=crop' },
-  { name: 'Bob Cut', img: 'https://images.unsplash.com/photo-1608877607386-8698047d65a9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Ym9iJTIwaGFpcmN1dHxlbnwwfHwwfHx8MA%3D%3D' },
+  { name: 'Soft Curls', img: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
+  { name: 'Balayage', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmFsYXlhZ2V8ZW58MHx8MHx8fDA%3D' },
+  { name: 'Bob Cut', img: 'https://media.istockphoto.com/id/509022082/photo/beautiful-woman-with-make-up.jpg?s=612x612&w=0&k=20&c=3sIVBvA_Tx2rtSLQJngpqoK2rNi_srau_APuS-Ar6e8=' },
 ]
 
 function Grid({ items }) {
