@@ -1,4 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+import { Navigation, Pagination } from 'swiper/modules'
+
 
 const fallbackServices = [
   { title: 'Hair Styling', desc: 'Cuts, coloring, and treatments tailored to your look.', price: '₹499+', duration: '45-60 min', gender: 'all',image:'https://tse1.mm.bing.net/th/id/OIP.FvjlU_0hfcoTAONfzKdjUgHaEK?pid=Api&P=0&h=220' },
@@ -57,14 +63,14 @@ export default function Services() {
   return (
     <section id="services" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading + Gender select */}
+       
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between mb-16">
           <div className="text-center sm:text-left">
             <h2 className="text-3xl font-display font-bold tracking-tight">Our Services</h2>
             <p className="mt-2 text-gray-600">Quality treatments by experienced professionals.</p>
           </div>
 
-          {/* Creative gender selector */}
+          
           <div className="w-full sm:w-auto">
             <p className="mb-1 text-xs font-medium uppercase tracking-[0.16em] text-gray-500 text-center sm:text-right">
               Tailor services for
@@ -96,193 +102,208 @@ export default function Services() {
           </div>
         </div>
 
-        {/* 3 Column Grid - Bigger Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {visible.map((s) => (
-            <article
-              key={s.title}
+       <Swiper
+  modules={[Navigation, Pagination]}
+  spaceBetween={30}
+  navigation
+  pagination={{ clickable: true }}
+  breakpoints={{
+    0: { slidesPerView: 1 },
+    640: { slidesPerView: 1.1 },
+    1024: { slidesPerView: 2.2 },
+    1280: { slidesPerView: 3 },
+  }}
+  className="!px-4"
+>
+  {visible.map((s) => (
+    <SwiperSlide key={s.title}>
+      <article
+        style={{
+          margin: 'auto',
+          width: '100%',
+          backgroundColor: '#fefefe',
+          borderRadius: '1.5rem',
+          padding: '0.25rem',
+          color: '#141417',
+          boxShadow: '0 20px 40px rgba(15, 23, 42, 0.15)',
+          height: 'min(600px, 100%)',
+        }}
+      >
+       
+        <section
+          style={{
+            backgroundColor: '#fef4e2',
+            borderRadius: '1.25rem 1.25rem 0 0',
+            padding: '1.5rem',
+            fontSize: '1rem',
+            height: '250px',
+          }}
+        >
+          <header
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
+              gap: '1rem',
+              fontWeight: 700,
+            }}
+          >
+            <div
               style={{
-                margin: 'auto',
-                width: '100%',
-                backgroundColor: '#fefefe',
-                borderRadius: '1.5rem',
-                padding: '0.25rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: '999px',
+                backgroundColor: '#fff7ea',
                 color: '#141417',
-                boxShadow: '0 20px 40px rgba(15, 23, 42, 0.15)',
-                height: 'min(600px, 100%)',
               }}
             >
-              {/* HERO - Bigger */}
-              <section
+              
+            </div>
+          </header>
+
+          {s.image && (
+            <div
+              style={{
+                marginTop: '0.2rem',
+                borderRadius: '1rem',
+                overflow: 'hidden',
+                height: '200px',
+              }}
+            >
+              <img
+                src={s.image}
+                alt={s.title}
                 style={{
-                  backgroundColor: '#fef4e2',
-                  borderRadius: '1.25rem 1.25rem 0 0',
-                  padding: '1.5rem',
+                  display: 'block',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                }}
+              />
+            </div>
+          )}
+        </section>
+
+        <footer
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            padding: '2rem',
+            rowGap: '0.5rem',
+            fontWeight: 700,
+            fontSize: '1rem',
+          }}
+        >
+          <p
+            style={{
+              fontSize: '1.25rem',
+              fontWeight: 600,
+              
+              margin: 0,
+              lineHeight: 1,
+            }}
+          >
+            {s.title}
+          </p>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              flexDirection: 'row',
+              flexWrap: 'nowrap',
+              gap: '1rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.5rem',
+              }}
+            >
+              <p
+                style={{
+                  fontWeight: 400,
                   fontSize: '1rem',
-                  height: '250px',
+                  color: '#111827',
+                  margin: 0,
+                  lineHeight: 1.5,
                 }}
               >
-                <header
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    flexWrap: 'nowrap',
-                    gap: '1rem',
-                    fontWeight: 700,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                     
-                      borderRadius: '999px',
-                      backgroundColor: '#fff7ea',
-                      color: '#141417',
-                    }}
-                  >
-                    
-                  </div>
-                </header>
-                {s.image &&(
-                  <div
-                    style={{
-                      marginTop: '0.2rem',
-                      borderRadius: '1rem',
-                      overflow: 'hidden',
-                      height: '200px',
-                    }}
-                  >
-                    <img
-                      src={s.image}
-                      alt={s.title}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                      }}
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none'
-                      }}
-                    />
-                  </div>
-                )}
-              </section>
-
-           
-              <footer
+                {s.desc}
+              </p>
+              <p
                 style={{
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  alignItems: 'flex-start',
-                  flexDirection: 'column',
-                  flexWrap: 'nowrap',
-                  padding: '2rem',
-                  rowGap: '1rem',
-                  fontWeight: 700,
-                  fontSize: '1rem',
+                  fontWeight: 300,
+                  fontSize: '0.95rem',
+                  color: '#6b7280',
+                  margin: 0,
                 }}
               >
-                <p
-                  style={{
-                    fontSize: '1.75rem',
-                    fontWeight: 600,
-                    paddingRight: '2rem',
-                    margin: 0,
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {s.title}
-                </p>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    flexWrap: 'nowrap',
-                    gap: '1rem',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem',
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontWeight: 400,
-                        fontSize: '1rem',
-                        color: '#111827',
-                        margin: 0,
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {s.desc}
-                    </p>
-                    <p
-                      style={{
-                        fontWeight: 400,
-                        fontSize: '0.95rem',
-                        color: '#6b7280',
-                        margin: 0,
-                      }}
-                    >
-                      {s.duration || 'Duration on consult'} ·{' '}
-                      {s.gender === 'male'
-                        ? 'For men'
-                        : s.gender === 'female'
-                        ? 'For women'
-                        : 'For everyone'}
-                    </p>
-                  </div>
-                </div>
+                {s.duration || 'Duration on consult'} ·{' '}
+                {s.gender === 'male'
+                  ? 'For men'
+                  : s.gender === 'female'
+                  ? 'For women'
+                  : 'For everyone'}
+              </p>
+            </div>
+          </div>
 
-                <button
-                  type="button"
-                  style={{
-                    width: '100%',
-                    fontWeight: 600,
-                    border: 'none',
-                    display: 'block',
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                    padding: '1rem 2rem',
-                    borderRadius: '1.25rem',
-                    backgroundColor: '#b89563',
-                    color: '#fff',
-                    fontSize: '1.1rem',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    boxShadow: '0 8px 25px rgba(184, 149, 99, 0.3)',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#000'
-                    e.currentTarget.style.transform = 'translateY(-4px)'
-                    e.currentTarget.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.4)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#b89563'
-                    e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(184, 149, 99, 0.3)'
-                  }}
-                  onClick={() => {
-                    const el = document.querySelector('#booking')
-                    if (el) el.scrollIntoView({ behavior: 'smooth' })
-                  }}
-                >
-                  Book this service
-                </button>
-              </footer>
-            </article>
-          ))}
-        </div>
+          <button
+            type="button"
+            style={{
+              width: '100%',
+              fontWeight: 600,
+              border: 'none',
+              display: 'block',
+              cursor: 'pointer',
+              textAlign: 'center',
+              padding: '0.5rem 1rem',
+              borderRadius: '1.25rem',
+              backgroundColor: '#b89563',
+              color: '#fff',
+              fontSize: '1rem',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              boxShadow: '0 8px 25px rgba(184, 149, 99, 0.3)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#000'
+              e.currentTarget.style.transform = 'translateY(-4px)'
+              e.currentTarget.style.boxShadow =
+                '0 20px 40px rgba(0, 0, 0, 0.4)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = '#b89563'
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow =
+                '0 8px 25px rgba(184, 149, 99, 0.3)'
+            }}
+            onClick={() => {
+              const el = document.querySelector('#booking')
+              if (el) el.scrollIntoView({ behavior: 'smooth' })
+            }}
+          >
+            Book this service
+          </button>
+        </footer>
+      </article>
+    </SwiperSlide>
+  ))}
+</Swiper>
+
       </div>
     </section>
   )

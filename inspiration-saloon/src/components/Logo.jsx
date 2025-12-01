@@ -7,7 +7,11 @@ export default function Logo({ size = 40 }) {
         aria-label="Inspiration Hair Studio logo"
       >
         <span className="font-display font-bold" style={{ fontSize: Math.max(14, size * 0.38) }}>
-          I·H·S
+          <img
+  src="/images/salonLOGO.png"
+  alt="Logo"
+  className="h-11 w-11 rounded-full object-cover"
+/>
         </span>
       </div>
       <div className="leading-tight select-none">
