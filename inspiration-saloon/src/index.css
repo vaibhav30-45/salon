@@ -38,6 +38,15 @@ body { @apply antialiased bg-white text-gray-900; }
 .animate-fade4 {
   animation: fadeSlide 16s infinite;
   animation-delay: 12s;
+.swiper-button-next,
+.swiper-button-prev {
+  color: #b89563;  
+  margin:15px;         
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 25px;          
 }
 
 
