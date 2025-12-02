@@ -1,50 +1,218 @@
-const boys = [
-  { name: 'Classic Fade', img: 'https://images.unsplash.com/photo-1672642150228-3fcd5826ec26?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { name: 'Textured Crop', img: 'https://plus.unsplash.com/premium_photo-1741902728626-e00aec0bf055?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8dGV4dHVyZWQlMjBjcm9wJTIwY3V0JTIwaGFpcnN0eWxlfGVufDB8fDB8fHww' },
-  { name: 'Side Part', img: 'https://static.vecteezy.com/system/resources/thumbnails/058/443/333/small/stylish-men-s-hairstyle-with-side-part-and-undercut-free-png.png' },
-]
-
-const girls = [
-  { name: 'Soft Curls', img: 'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { name: 'Balayage', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmFsYXlhZ2V8ZW58MHx8MHx8fDA%3D' },
-  { name: 'Bob Cut', img: 'https://media.istockphoto.com/id/509022082/photo/beautiful-woman-with-make-up.jpg?s=612x612&w=0&k=20&c=3sIVBvA_Tx2rtSLQJngpqoK2rNi_srau_APuS-Ar6e8=' },
-]
-
-function Grid({ items }) {
-  return (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {items.map((s) => (
-        <div key={s.name} className="group relative overflow-hidden rounded-xl bg-white shadow-sm">
-          <img src={s.img} alt={s.name} className="h-64 w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 p-4 text-white font-medium">{s.name}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
+import { useState, useEffect, useRef } from "react";
 
 export default function HairStyles() {
+   const boysData = [
+  { 
+    name: "Crew Cut", 
+    image: "https://storage.googleapis.com/postcrafts-public-content/hairstyleai/blog/549edd52-ff15-408d-80b1-a88e15d2bc99.jpg" 
+  },
+  { 
+    name: "Fade Cut", 
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLsYjflaqBthXvURpylsQwRE0U4rAXV9SRVg&s" 
+  },
+  { 
+    name: "Undercut", 
+    image:"https://cdn.shopify.com/s/files/1/0029/0868/4397/files/Side-Swept-Undercut.webp?v=1756304439"
+  },
+  { 
+    name: "Buzz Cut", 
+    image: "https://haircutinspiration.com/wp-content/uploads/Pitch-Perfect-Buzz-Cut.jpg" 
+  },
+  { 
+    name: "Quiff", 
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxXETSsrhiPwaE4R4-oyyVBaJmUy_SN3iFbhw_cgK323h-eUXaZ4pHsTMqMgtppRGylS0&usqp=CAU" 
+  },
+  { 
+    name: "Pompadour", 
+    image: "https://i.pinimg.com/564x/48/d6/76/48d6761fe230ad0734d0817e603f08ec.jpg" 
+  },
+  { 
+    name: "Side Part", 
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5LS2u9rbV4KMA-GF7YDxyEHsV_KbjiyIEYg&s" 
+  },
+  { 
+    name: "French Crop", 
+    image: "https://i.pinimg.com/736x/2c/33/e9/2c33e968bb9cee7e973462865f50a0fa.jpg" 
+  },
+  { 
+    name: "Textured Crop", 
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop" 
+  },
+  { 
+    name: "Spiky Haircut", 
+    image: "https://cdn.shopify.com/s/files/1/0029/0868/4397/files/medium-spiky-hairstyle-men.webp?v=1758794611" 
+  }
+];
+
+
+  const girlsData = [
+  { 
+    name: "Balayage Waves", 
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrRYWJcqRghPeI7io2IUiPOfe6XvL2ATfb_A&s" 
+  },
+  { 
+    name: "French Bob", 
+    image: "https://i.pinimg.com/736x/4a/62/d9/4a62d9aad328db864609182726dde5a8.jpg" 
+  },
+  { 
+    name: "Beach Waves", 
+    image: "https://i.pinimg.com/736x/73/2b/30/732b30bf5f8f4f468da3fe74f8cec84f.jpg" 
+  },
+  { 
+    name: "Braided Updo", 
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHXiTZ2SdvRVm84p_G7bD2sFH0bQrRBpz6VQ&s" 
+  },
+  {
+    name: "Layered Cut",
+    image: "https://i.pinimg.com/736x/9a/9b/ac/9a9bacb61318eb306b1ff8dc0ccedfd6.jpg"
+  },
+  {
+    name: "Curtain Bangs",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGEuzzUqAqz427HDeD6ahQCqfLJqD-qRuiIg&s"
+  },
+  {
+    name: "Straight Long Hair",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6tMcPoikNWY3f5k3v5KFL23E1tnSeWDg-vw&s"
+  },
+  {
+    name: "Messy Bun",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYiGwCuMTfKhur5aXh7lCWLifGE7KEBwA2XA&s"
+  },
+  {
+    name: "Half-Up Half-Down",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj11c-vCe856AuZwZ71zlYn9P2WgoBR5_nhA&s"
+  },
+  {
+    name: "Pixie Cut",
+    image: "https://i2.wp.com/www.hadviser.com/wp-content/uploads/2023/01/2-trendy-french-pixie-bob-Cr-N9voNIEd.jpg?resize=787%2C917&ssl=1"
+  }
+];
+
+
+
+  const boysSliderRef = useRef(null);
+  const girlsSliderRef = useRef(null);
+
+  // Duplicate items for infinite effect
+  const boysItems = [...boysData, ...boysData];
+  const girlsItems = [...girlsData, ...girlsData];
+
+
   return (
-    <section id="hairstyles" className="py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto">
+    <>
+    <style>{`
+  .hairstyles-section {
+  width: 100%;
+  padding: 40px 0;
+ 
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  margin: 18px 0;
+  text-align: center;
+  
+}
+
+.auto-slider-div {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  
+}
+
+/* slider track */
+.auto-slider {
+  display: flex;
+  width: max-content;
+  animation: scroll 35s linear infinite;
+}
+
+.auto-slider-div:hover .auto-slider {
+  animation-play-state: paused;
+}
+
+/* slide card */
+.slide {
+  flex: 0 0 280px;
+  margin-right: 20px;
+ 
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  position: relative;
+}
+
+.slide img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+/* Name overlay */
+.slide-name {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* infinite animation */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { flex: 0 0 220px; }
+  .slide img { height: 260px; }
+}
+
+@media (max-width: 480px) {
+  .slide { flex: 0 0 180px; }
+  .slide img { height: 220px; }
+}
+
+
+    `}</style>
+    <section id="hairstyles" className="auto-slider-section">
+      <div className="text-center max-w-2xl mx-auto">
           <h2 className="text-3xl font-display font-bold tracking-tight">Hair Styles</h2>
           <p className="mt-3 text-gray-600">Trendy looks for boys and girls, tailored by our stylists.</p>
         </div>
-        <div className="mt-10 space-y-12">
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Boys</h3>
-            <Grid items={boys} />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Girls</h3>
-            <Grid items={girls} />
-          </div>
+ <h3 className="title">Boys Hairstyles</h3>
+      <div className="auto-slider-div">
+        <div className="auto-slider" ref={boysSliderRef}>
+          {boysItems.map((style, index) => (
+            <div className="slide" key={index}>
+              <img src={style.image} alt={style.name} />
+              <div className="slide-name">{style.name}</div>
+            </div>
+          ))}
         </div>
       </div>
-    </section>
-  )
+
+      <h3 className="title" style={{ marginTop: "60px" }}>Girls Hairstyles</h3>
+      <div className="auto-slider-div">
+        <div className="auto-slider" ref={girlsSliderRef}>
+          {girlsItems.map((style, index) => (
+            <div className="slide" key={index}>
+              <img src={style.image} alt={style.name} />
+              <div className="slide-name">{style.name}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section></>
+  );
 }
 
 
