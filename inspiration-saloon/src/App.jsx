@@ -8,6 +8,7 @@ import Pricing from './components/Pricing'
 import Cta from './components/Cta'
 import Footer from './components/Footer'
 import AiRecommendations from './components/AiRecommendations'
+import FindUs from './components/FindUs'
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Gallery />
         {/* <Pricing /> */}
         <Cta />
+        <FindUs />
       </main>
       <Footer />
     </div>
