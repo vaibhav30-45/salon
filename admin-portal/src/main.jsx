@@ -14,7 +14,7 @@ function App() {
   const [services, setServices] = useState([])
   const [svcLoading, setSvcLoading] = useState(false)
   const [svcError, setSvcError] = useState('')
-  const [svcForm, setSvcForm] = useState({ name: '', description: '', price: '', duration: '', image: '', active: true })
+  const [svcForm, setSvcForm] = useState({ name: '', description: '', price: '', duration: '', image: '',gender:'', active: true })
   const [msgs, setMsgs] = useState([])
   const [msgLoading, setMsgLoading] = useState(false)
   const [msgError, setMsgError] = useState('')
@@ -141,7 +141,7 @@ function App() {
       const data = await safeParseJson(res)
       if (!res.ok) throw new Error(data.error || 'Failed to add service')
       setServices([data, ...services])
-      setSvcForm({ name: '', description: '', price: '', duration: '', image: '', active: true })
+      setSvcForm({ name: '', description: '', price: '', duration: '', image: '',gender:'', active: true })
     } catch (e) { setSvcError(e.message) }
   }
   async function updateService(id, patch) {
@@ -490,9 +490,10 @@ function App() {
                         {svcError && <div className="text-sm text-red-600">{svcError}</div>}
                         <input className="form-input" placeholder="Name" value={svcForm.name} onChange={(e)=>setSvcForm({...svcForm, name:e.target.value})} />
                         <textarea className="form-input" rows="3" placeholder="Description" value={svcForm.description} onChange={(e)=>setSvcForm({...svcForm, description:e.target.value})} />
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-3 gap-2">
                           <input className="form-input" placeholder="Price" value={svcForm.price} onChange={(e)=>setSvcForm({...svcForm, price:e.target.value})} />
                           <input className="form-input" placeholder="Duration" value={svcForm.duration} onChange={(e)=>setSvcForm({...svcForm, duration:e.target.value})} />
+                          <input className="form-input" placeholder="Gender" value={svcForm.gender} onChange={(e)=>setSvcForm({...svcForm, gender:e.target.value})} />
                         </div>
                         <input className="form-input" placeholder="Image URL (optional)" value={svcForm.image} onChange={(e)=>setSvcForm({...svcForm, image:e.target.value})} />
                         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={svcForm.active} onChange={(e)=>setSvcForm({...svcForm, active:e.target.checked})} /> Active</label>
@@ -513,7 +514,7 @@ function App() {
                                 <div className="flex-1">
                                   <div className="flex items-center justify-between">
                                     <div className="font-medium">{s.name}</div>
-                                    <div className="text-sm text-gray-600">₹{s.price} · {s.duration || '—'}</div>
+                                    <div className="text-sm text-gray-600">₹{s.price} · {s.duration || '—'} · {s.gender} </div>
                                   </div>
                                   <div className="text-sm text-gray-600">{s.description || '—'}</div>
                                   <div className="mt-2 flex items-center gap-2 text-sm">

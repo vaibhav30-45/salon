@@ -31,6 +31,17 @@ const fallback = [
     desc: 'Single-tone makeup with sleek updo for a modern finish.',
     image: 'https://tse4.mm.bing.net/th/id/OIP.EnGmXinZCgKBQGxehfg4-wHaHa?pid=Api&P=0&h=220',
   },
+  {
+    name: 'Sporty Glow',
+    desc:' Lightweight coverage with a natural, healthy glow for an active lifestyle.',
+
+    image: 'https://tse1.mm.bing.net/th/id/OIP.Woh9CWe8g-jQagNc2Dq2nQHaFW?pid=Api&P=0&h=220',
+  },
+  {
+    name: 'Retro Classic',
+    desc: 'Vintage waves + red lips for timeless elegance.',
+    image: 'https://tse3.mm.bing.net/th/id/OIP.PhZ3aFhTMIBxhxXbsx9dOwHaHa?pid=Api&P=0&h=220',
+  }
 ]
 
 function merge(base, incoming) {
@@ -95,11 +106,11 @@ export default function AiRecommendations() {
         </div>
 
         
-        <div className="wrapper grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-10 justify-items-center">
+        <div className="wrapper grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-1 gap-y-10 justify-items-center">
           {suggestions.map((s, index) => (
             <article
               key={s.name}
-              className="group card relative w-[380px] h-[410px] rounded-2xl p-6 bg-white shadow-[0_7px_10px_rgba(0,0,0,0.5)]
+              className="group card relative w-[300px] h-[360px] rounded-2xl p-6 bg-white shadow-[0_7px_10px_rgba(0,0,0,0.5)]
                          flex items-end overflow-hidden transition-transform duration-300 ease-out"
             >
               

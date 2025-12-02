@@ -7,12 +7,13 @@ import { Navigation, Pagination } from 'swiper/modules'
 
 
 const fallbackServices = [
-  { title: 'Hair Styling', desc: 'Cuts, coloring, and treatments tailored to your look.', price: '₹499+', duration: '45-60 min', gender: 'all',image:'https://tse1.mm.bing.net/th/id/OIP.FvjlU_0hfcoTAONfzKdjUgHaEK?pid=Api&P=0&h=220' },
+  { title: 'Hair Styling', desc: 'Cuts, coloring, and treatments tailored to your look.', price: '₹499+', duration: '45-60 min', gender: 'unisex',image:'https://tse1.mm.bing.net/th/id/OIP.FvjlU_0hfcoTAONfzKdjUgHaEK?pid=Api&P=0&h=220' },
   { title: 'Beard Grooming', desc: 'Precision trims and shaping for a sharp finish.', price: '₹299+', duration: '20-30 min', gender: 'male',image:'https://tse2.mm.bing.net/th/id/OIP.Cev_mKYCKlgrvUZghPWCSgHaD3?pid=Api&P=0&h=220' },
-  { title: 'Facials', desc: 'Relaxing treatments to cleanse and rejuvenate your skin.', price: '₹799+', duration: '45-60 min', gender: 'all',image:'https://tse4.mm.bing.net/th/id/OIP.3RxLPo7kY8fQYM7NzJZCOwHaEK?pid=Api&P=0&h=220' },
+  { title: 'Facials', desc: 'Relaxing treatments to cleanse and rejuvenate your skin.', price: '₹799+', duration: '45-60 min', gender: 'unisex',image:'https://tse4.mm.bing.net/th/id/OIP.3RxLPo7kY8fQYM7NzJZCOwHaEK?pid=Api&P=0&h=220' },
   { title: 'Manicure & Pedicure', desc: 'Clean, polished, and perfectly groomed hands and feet.', price: '₹699+', duration: '45-60 min', gender: 'female',image:'https://tse3.mm.bing.net/th/id/OIP.R9tYls2TeqXCm0DjTJZT8gHaE8?pid=Api&P=0&h=220' },
   { title: 'Party Makeup (AI-Enhanced)', desc: 'Look party-ready with AI-tailored shades and finishes.', price: '₹1999+', duration: '60-90 min', gender: 'female',image:'https://tse3.mm.bing.net/th/id/OIP.n_OEucvCRCoBMwZtAocUsQHaE0?pid=Api&P=0&h=220' },
   { title: 'Bridal Makeup (AI Preview)', desc: 'Preview your bridal look with AI suggestions before the session.', price: '₹5999+', duration: '120-180 min', gender: 'female' ,image:'https://tse4.mm.bing.net/th/id/OIP.HwYqgOiUPlwcs_PD2aePugHaE8?pid=Api&P=0&h=220'},
+  
 ]
 
 function mergeAndDedupe(base, incoming) {
@@ -77,7 +78,7 @@ export default function Services() {
             </p>
             <div className="inline-flex w-full sm:w-auto items-center justify-between gap-1 rounded-2xl bg-white/70 px-2 py-1.5 shadow-sm ring-1 ring-gray-200 backdrop-blur">
               {[
-                { value: 'all', label: 'All' },
+                { value: 'unisex', label: 'Unisex' },
                 { value: 'male', label: 'Male' },
                 { value: 'female', label: 'Female' },
               ].map(option => {
@@ -114,9 +115,10 @@ export default function Services() {
     1280: { slidesPerView: 3 },
   }}
   className="!px-4"
+  
 >
   {visible.map((s) => (
-    <SwiperSlide key={s.title}>
+    <SwiperSlide key={s.title}   style={{ overflow: 'visible', paddingBottom: '2rem' }}>
       <article
         style={{
           margin: 'auto',
@@ -125,7 +127,7 @@ export default function Services() {
           borderRadius: '1.5rem',
           padding: '0.25rem',
           color: '#141417',
-          boxShadow: '0 20px 40px rgba(15, 23, 42, 0.15)',
+          boxShadow: '0 20px 20px rgba(15, 23, 42, 0.28)',
           height: 'min(600px, 100%)',
         }}
       >
